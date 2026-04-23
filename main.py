@@ -11,8 +11,8 @@ def ls():
         print("no files")
         return
 
-    for f in files:
-        print(f)
+    for name in files:
+        print(name)
 
 
 def filter():
@@ -59,11 +59,34 @@ def search():
 
 
 def size():
-    pass
+    files = os.listdir()
+
+    if not files:
+        print("no files")
+        return
+
+    for name in files:
+        size = os.path.getsize(name)
+        print(f"{name} – {size} bytes")
 
 
 def stats():
-    pass
+    files = os.listdir()
+
+    if not files:
+        print("no files")
+        return
+
+    total = 0
+    result = 0
+
+    for name in files:
+        size = os.path.getsize(name)
+        total += size
+        result += 1
+
+    print(f"files: {result}")
+    print(f"total size: {total} bytes")
 
 
 def main():
