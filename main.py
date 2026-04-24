@@ -4,11 +4,20 @@ from utils import input_non_empty
 commands = ("ls", "filter", "search", "size", "stats", "exit", "help")
 
 
-def ls():
+def get_files():
     files = os.listdir()
 
     if not files:
         print("no files")
+        return
+
+    return files
+
+
+def ls():
+    files = get_files()
+
+    if not files:
         return
 
     for name in files:
@@ -16,10 +25,9 @@ def ls():
 
 
 def filter():
-    files = os.listdir()
+    files = get_files()
 
     if not files:
-        print("no files")
         return
 
     ext = input_non_empty("\next: ").lower()
@@ -39,10 +47,9 @@ def filter():
 
 
 def search():
-    files = os.listdir()
+    files = get_files()
 
     if not files:
-        print("no files")
         return
 
     query = input_non_empty("\nsearch: ").lower()
@@ -59,31 +66,31 @@ def search():
 
 
 def size():
-    files = os.listdir()
+    files = get_files()
 
     if not files:
-        print("no files")
         return
 
     for name in files:
-        size = os.path.getsize(name)
-        print(f"{name} – {size} bytes")
+        if os.path.isfile(name):
+            size = os.path.getsize(name)
+            print(f"{name} – {size} bytes")
 
 
 def stats():
-    files = os.listdir()
+    files = get_files()
 
     if not files:
-        print("no files")
         return
 
     total = 0
     result = 0
 
     for name in files:
-        size = os.path.getsize(name)
-        total += size
-        result += 1
+        if os.path.isfile(name):
+            size = os.path.getsize(name)
+            total += size
+            result += 1
 
     print(f"files: {result}")
     print(f"total size: {total} bytes")
