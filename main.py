@@ -4,6 +4,15 @@ from utils import input_non_empty
 commands = ("ls", "filter", "search", "size", "stats", "exit", "help")
 
 
+def format_size(size):
+    if size < 1024:
+        return f"{size} B"
+    elif size < 1024 * 1024:
+        return f"{size / 1024:.2f} KB"
+    else:
+        return f"{size / (1024 * 1024):.2f} MB"
+
+
 def get_files():
     files = os.listdir()
 
@@ -74,7 +83,7 @@ def size():
     for name in files:
         if os.path.isfile(name):
             size = os.path.getsize(name)
-            print(f"{name} – {size} bytes")
+            print(f"{name} – {format_size(size)}")
 
 
 def stats():
@@ -93,7 +102,7 @@ def stats():
             result += 1
 
     print(f"files: {result}")
-    print(f"total size: {total} bytes")
+    print(f"total size: {format_size(total)}")
 
 
 def main():
