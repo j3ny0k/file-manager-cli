@@ -1,7 +1,16 @@
 import os
 from utils import input_non_empty
 
-commands = ("ls", "filter", "search", "size", "stats", "exit", "help")
+commands = ("ls", "filter", "search", "size", "stats", "help", "exit")
+
+
+def format_size(size):
+    if size < 1024:
+        return f"{size} B"
+    elif size < 1024 * 1024:
+        return f"{size / 1024:.2f} KB"
+    else:
+        return f"{size / (1024 * 1024):.2f} MB"
 
 
 def get_files():
@@ -24,7 +33,26 @@ def ls():
         print(name)
 
 
-def filter():
+def search():
+    files = get_files()
+
+    if not files:
+        return
+
+    query = input_non_empty("\nsearch: ").lower()
+
+    found = False
+
+    for name in files:
+        if query in name.lower():
+            print(name)
+            found = True
+
+    if not found:
+        print("not found")
+
+
+def filter_files():
     files = get_files()
 
     if not files:
@@ -46,25 +74,6 @@ def filter():
         print("not found")
 
 
-def search():
-    files = get_files()
-
-    if not files:
-        return
-
-    query = input_non_empty("\nsearch: ").lower()
-
-    found = False
-
-    for name in files:
-        if query in name.lower():
-            print(name)
-            found = True
-
-    if not found:
-        print("not found")
-
-
 def size():
     files = get_files()
 
@@ -74,7 +83,7 @@ def size():
     for name in files:
         if os.path.isfile(name):
             size = os.path.getsize(name)
-            print(f"{name} – {size} bytes")
+            print(f"{name} – {format_size(size)}")
 
 
 def stats():
@@ -93,7 +102,7 @@ def stats():
             result += 1
 
     print(f"files: {result}")
-    print(f"total size: {total} bytes")
+    print(f"total size: {format_size(total)}")
 
 
 def main():
@@ -102,30 +111,30 @@ def main():
     while True:
         command = input_non_empty("\ncommand: ").lower()
 
-        if command == "help":
-            print("allowed commands:", ", ".join(commands))
-
-        elif command not in commands:
+        if command not in commands:
             print("invalid command:", command)
             print("available:", ", ".join(commands))
-
-        elif command == "exit":
-            break
 
         elif command == "ls":
             ls()
 
-        elif command == "filter":
-            filter()
-
         elif command == "search":
             search()
+
+        elif command == "filter":
+            filter_files()
 
         elif command == "size":
             size()
 
         elif command == "stats":
             stats()
+
+        elif command == "help":
+            print("allowed commands:", ", ".join(commands))
+
+        elif command == "exit":
+            break
 
 
 if __name__ == "__main__":
